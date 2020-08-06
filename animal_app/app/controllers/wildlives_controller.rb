@@ -1,0 +1,47 @@
+class WildlivesController < ApplicationController
+    def index
+        animals = Wildlife.all 
+        render json: animals
+    end
+
+    def show
+        animal = Wildlife.find(params[:id])
+        view = animal.sightings
+        render json: [animal,view]
+    end
+
+    def create
+        animal = Wildlife.create(animal_params)
+        if animal.valid?
+            render json: animal
+        else
+            render json: animal.errors
+        end
+    end
+    
+    def update
+        animal = Wildlife.find(params[:id])
+        animal.update(animal_params)
+        if animal.valid?
+            render json: animal
+        else
+            render json: animal.errors
+        end
+    end
+
+    def destroy
+        animal = Wildlife.find(params[:id])
+        if animal.destroy
+            render json: animal
+        else
+            render json: animal.errors
+        end
+    end
+
+    private
+    
+    def animal_params
+        params.require(:wildlife).permit(:common_name, :latin_name, :kingdom)
+    end
+
+end
